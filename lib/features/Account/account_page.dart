@@ -6,7 +6,13 @@ class AccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(child: Text('Account Page'), color: Colors.blue,),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 40.0),
+        child: Container(
+          child: Text('Account Page'), 
+          color: Colors.blue,
+        ),
+      ),
     );
   }
 }
