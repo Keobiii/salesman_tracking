@@ -1,5 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:salesman_tracking/constant/UserLocation.dart';
+import 'package:salesman_tracking/model/user_location_model.dart';
+
+
+Future<Set<Marker>> buildUserMarkers(List<UserLocationModel> users) async {
+  Set<Marker> markers = {};
+
+  for (var userLocation in users) {
+    final customIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(64, 64)),
+      userLocation.marker, 
+    );
+
+    markers.add(
+      Marker(
+        markerId: MarkerId(userLocation.user.id),
+        position: LatLng(userLocation.latitude, userLocation.longitude),
+        infoWindow: InfoWindow(
+          title: "${userLocation.user.firstName} ${userLocation.user.lastName}",
+          snippet: "@${userLocation.user.username}",
+        ),
+        icon: customIcon,
+      ),
+    );
+  }
+
+  return markers;
+}
+
+
 
 class TrackPage extends StatefulWidget {
   const TrackPage({super.key});
@@ -10,43 +40,75 @@ class TrackPage extends StatefulWidget {
 
 class _TrackPageState extends State<TrackPage> {
   GoogleMapController? _mapController;
+  Set<Marker> _markers = {};
+  late BitmapDescriptor customIcon;
+  late CameraPosition _initialPosition;
 
-  final CameraPosition _initialPosition = const CameraPosition(
-    target: LatLng(14.566575891892164, 121.08922372230174),
-    tilt: 50.0,
-    zoom: 14.0,
-    bearing: 90,
-  );
 
-  void _goToQuezonCity() {
-    _mapController?.animateCamera(
-      CameraUpdate.newCameraPosition(
-        const CameraPosition(
-          target: LatLng(14.6760, 121.0437), // 📍 Quezon City
-          zoom: 14,
-          tilt: 45,   // 📐 tilt for 3D effect
-          bearing: 90, // ➡️ rotate east
-        ),
-      ),
-    );
+  // Set<Circle> _circles = {
+  //   Circle(
+  //     circleId: CircleId("area"),
+  //     center: LatLng(14.5995, 120.9842),
+  //     radius: 500, // in meters
+  //     fillColor: Colors.blue.withOpacity(0.3),
+  //     strokeColor: Colors.blue,
+  //     strokeWidth: 2,
+  //   ),
+  // };
+
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if (userLocations.isNotEmpty) {
+      final firstUser = userLocations[0];
+      _initialPosition = CameraPosition(
+        target: LatLng(firstUser.latitude, firstUser.longitude),
+        tilt: 50,
+        zoom: 14,
+        bearing: 90
+      );
+    } else {
+      _initialPosition = const CameraPosition(
+        target: LatLng(14.5995, 120.9842), 
+        zoom: 14,
+      );
+      
+    }
+
+    _loadUserMarkers();
   }
 
-    void _zoomIn() {
-    _mapController?.animateCamera(CameraUpdate.zoomIn());
+  Future<void> _loadUserMarkers() async {
+    final markers = await buildUserMarkers(userLocations);
+    setState(() {
+      _markers = markers;
+    });
   }
 
-  void _zoomOut() {
-    _mapController?.animateCamera(CameraUpdate.zoomOut());
-  }
+  // Future<void> _loadCustomMarker() async {
+  //   customIcon = await BitmapDescriptor.fromAssetImage(
+  //     const ImageConfiguration(size: Size(64, 64)),
+  //     "assets/marker/user1.png",
+  //   );
 
-  void _panRight() {
-    _mapController?.animateCamera(CameraUpdate.scrollBy(100, 0));
-  }
-
-  void _panLeft() {
-    _mapController?.animateCamera(CameraUpdate.scrollBy(-100, 0));
-  }
-
+  //   setState(() {
+  //     _markers.add(
+  //       Marker(
+  //         markerId: const MarkerId("manila"),
+  //         position: const LatLng(14.5995, 120.9842),
+  //         infoWindow: const InfoWindow(
+  //           title: "Manila",
+  //           snippet: "Capital of the Philippines",
+  //         ),
+  //         icon: customIcon, 
+  //       ),
+  //     );
+  //   });
+  // }
 
 
   @override
@@ -64,23 +126,111 @@ class _TrackPageState extends State<TrackPage> {
           GoogleMap(
             initialCameraPosition: _initialPosition,
             onMapCreated: (controller) => _mapController = controller,
-            myLocationEnabled: true,
+            mapType: MapType.normal,
+            myLocationEnabled: false,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
+            compassEnabled: false,           
+            mapToolbarEnabled: false,  
+            markers: _markers,
+            // onTap: _onMapTapped,
           ),
           Positioned(
             bottom: 20,
-            left: 20,
-            right: 20,
-            child: Wrap(
-              spacing: 10,
-              children: [
-                ElevatedButton(onPressed: _goToQuezonCity, child: const Text("Go QC")),
-                ElevatedButton(onPressed: _zoomIn, child: const Text("Zoom In")),
-                ElevatedButton(onPressed: _zoomOut, child: const Text("Zoom Out")),
-                ElevatedButton(onPressed: _panLeft, child: const Text("← Left")),
-                ElevatedButton(onPressed: _panRight, child: const Text("Right →")),
-              ],
+            left: 0,
+            right: 0,
+            child: SizedBox(
+              height: 150, // card height
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: userLocations.length,
+                itemBuilder: (context, index) {
+                  final userLocation = userLocations[index];
+                  return GestureDetector(
+                    onTap: () {
+                      // print("lat: " + userLocation.latitude.toString() + " long: " + userLocation.longitude.toString()); 
+
+                      // set new camera position
+                      _mapController?.animateCamera(
+                        CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                            target: LatLng(userLocation.latitude, userLocation.longitude),
+                            zoom: 15,   
+                            tilt: 45,  
+                            bearing: 90,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150,
+                      margin: const EdgeInsets.only(left: 16),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 6,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                         Container(
+                            width: 56, 
+                            height: 56,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.green, 
+                                width: 3,            
+                              ),
+                            ),
+                            child: ClipOval(
+                              child: Image.asset(
+                                userLocation.user.avatar,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "${userLocation.user.firstName} ${userLocation.user.lastName}",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                "Online",
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                          
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           )
+
         ],
       ),
     );
