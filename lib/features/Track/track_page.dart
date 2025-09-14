@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:salesman_tracking/constant/UserLocation.dart';
+import 'package:salesman_tracking/constant/user_location.dart';
 import 'package:salesman_tracking/model/user_location_model.dart';
 
 
@@ -187,7 +187,7 @@ class _TrackPageState extends State<TrackPage> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: Colors.green, 
+                                color: userLocation.user.status.color, 
                                 width: 3,            
                               ),
                             ),
@@ -210,13 +210,13 @@ class _TrackPageState extends State<TrackPage> {
                                 width: 8,
                                 height: 8,
                                 decoration: BoxDecoration(
-                                  color: Colors.green,
+                                  color: userLocation.user.status.color,
                                   shape: BoxShape.circle,
                                 ),
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                "Online",
+                                "${userLocation.user.status.status}",
                                 style: const TextStyle(color: Colors.grey),
                               ),
                             ],

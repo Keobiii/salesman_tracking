@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:salesman_tracking/model/status_model.dart';
 import 'package:salesman_tracking/model/user_location_model.dart';
 import 'package:salesman_tracking/model/user_model.dart';
 
@@ -8,6 +10,7 @@ final List<UserLocationModel> userLocations = [
       firstName: "Juan",
       lastName: "Dela Cruz",
       username: "juandelacruz",
+      status: StatusModel.online,
       avatar: "assets/avatar/user1.png",
     ),
     latitude: 14.559745601042923,
@@ -20,6 +23,7 @@ final List<UserLocationModel> userLocations = [
       firstName: "Juan",
       lastName: "Dela Cruz",
       username: "juandelacruz",
+      status: StatusModel.online,
       avatar: "assets/avatar/user2.png",
     ),
     latitude: 14.531000014207548, 
@@ -32,6 +36,7 @@ final List<UserLocationModel> userLocations = [
       firstName: "Juan",
       lastName: "Dela Cruz",
       username: "juandelacruz",
+      status: StatusModel.busy,
       avatar: "assets/avatar/user3.png",
     ),
     latitude: 14.555259541275106,
@@ -44,6 +49,7 @@ final List<UserLocationModel> userLocations = [
       firstName: "Maria",
       lastName: "Clara",
       username: "mariaclara",
+      status: StatusModel.away,
       avatar: "assets/avatar/user4.png"
     ),
     latitude: 14.560742490661262,
@@ -56,6 +62,7 @@ final List<UserLocationModel> userLocations = [
       firstName: "Maria",
       lastName: "Clara",
       username: "mariaclara",
+      status: StatusModel.offline,
       avatar: "assets/avatar/user5.png"
     ),
     latitude: 14.578021194627475,
