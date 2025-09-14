@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:salesman_tracking/model/status_model.dart';
 import 'package:salesman_tracking/model/user_location_model.dart';
 import 'package:salesman_tracking/model/user_model.dart';
@@ -7,9 +6,9 @@ final List<UserLocationModel> userLocations = [
   UserLocationModel(
     user: UserModel(
       id: "1",
-      firstName: "Juan",
-      lastName: "Dela Cruz",
-      username: "juandelacruz",
+      firstName: "Lorem",
+      lastName: "Ipsum",
+      username: "developer",
       status: StatusModel.online,
       avatar: "assets/avatar/user1.png",
     ),
@@ -20,9 +19,9 @@ final List<UserLocationModel> userLocations = [
   UserLocationModel(
     user: UserModel(
       id: "2",
-      firstName: "Juan",
-      lastName: "Dela Cruz",
-      username: "juandelacruz",
+      firstName: "Crisostomo",
+      lastName: "Ibarra",
+      username: "damaincharacter",
       status: StatusModel.online,
       avatar: "assets/avatar/user2.png",
     ),
@@ -33,9 +32,9 @@ final List<UserLocationModel> userLocations = [
   UserLocationModel(
     user: UserModel(
       id: "3",
-      firstName: "Juan",
-      lastName: "Dela Cruz",
-      username: "juandelacruz",
+      firstName: "Padre",
+      lastName: "Damaso",
+      username: "yourchickpriest",
       status: StatusModel.busy,
       avatar: "assets/avatar/user3.png",
     ),
@@ -59,9 +58,9 @@ final List<UserLocationModel> userLocations = [
   UserLocationModel(
     user: UserModel(
       id: "5",
-      firstName: "Maria",
-      lastName: "Clara",
-      username: "mariaclara",
+      firstName: "Sisa",
+      lastName: "",
+      username: "sisaisnotcrazy",
       status: StatusModel.offline,
       avatar: "assets/avatar/user5.png"
     ),

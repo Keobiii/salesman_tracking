@@ -9,7 +9,7 @@ Future<Set<Marker>> buildUserMarkers(List<UserLocationModel> users) async {
 
   for (var userLocation in users) {
     final customIcon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(64, 64)),
+      const ImageConfiguration(size: Size(122, 122)),
       userLocation.marker, 
     );
 
