@@ -10,7 +10,10 @@ final _router = GoRouter(
   initialLocation: "/home",
   routes: [
     ShellRoute(
-      builder: (context, state, child) => BottomNavigation(child: child),
+      builder: (context, state, child) => BottomNavigation(
+        child: child,
+        currentLocation: state.uri.toString(), // Pass current URI
+      ),
       routes: [
         GoRoute(path: "/home", builder: (context, state) => const HomePage()),
         GoRoute(path: "/track", builder: (context, state) => const TrackPage()),
@@ -27,9 +30,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      title: "Salesman Tracking",
+      theme: ThemeData(useMaterial3: true),
       routerConfig: _router,
     );
   }
 }
-
-
