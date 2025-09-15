@@ -16,9 +16,10 @@ final _router = GoRouter(
         currentLocation: state.uri.toString(), // Pass current URI
       ),
       routes: [
-        GoRoute(path: "/home", builder: (context, state) => const MessagePage()),
+        GoRoute(path: "/home", builder: (context, state) => const HomePage()),
         GoRoute(path: "/track", builder: (context, state) => const TrackPage()),
         GoRoute(path: "/chat", builder: (context, state) => const ChatPage()),
+        GoRoute(path: "/message", builder: (context, state) => const MessagePage()),
         GoRoute(path: "/account", builder: (context, state) => const AccountPage()),
       ],
     ),

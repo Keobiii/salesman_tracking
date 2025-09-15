@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:salesman_tracking/constant/user_location.dart';
 
@@ -63,77 +64,83 @@ class ChatPage extends StatelessWidget {
                   final userLocation = userLocations[index];
                   final user = userLocation.user;
 
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    padding: const EdgeInsets.only(bottom: 15),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                child: CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.blue[300],
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigate to message page
+                      context.push('/message');
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.only(bottom: 15),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 60,
+                            width: 60,
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Positioned(
+                                  top: 0,
+                                  left: 0,
                                   child: CircleAvatar(
-                                    radius: 18,
-                                    backgroundImage: AssetImage(user.avatar),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.green[300],
-                                  child: CircleAvatar(
-                                    radius: 18,
-                                    backgroundImage: AssetImage(
-                                      "assets/avatar/user1.png",
+                                    radius: 20,
+                                    backgroundColor: Colors.blue[300],
+                                    child: CircleAvatar(
+                                      radius: 18,
+                                      backgroundImage: AssetImage(user.avatar),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${user.firstName} ${user.lastName}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: CircleAvatar(
+                                    radius: 20,
+                                    backgroundColor: Colors.green[300],
+                                    child: CircleAvatar(
+                                      radius: 18,
+                                      backgroundImage: AssetImage(
+                                        "assets/avatar/user1.png",
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-
-                              SizedBox(height: 4),
-                              Text(
-                                'Last message preview goes here...',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 14,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                    
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${user.firstName} ${user.lastName}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                    
+                                SizedBox(height: 4),
+                                Text(
+                                  'Last message preview goes here...',
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 14,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

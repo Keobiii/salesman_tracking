@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
 class MessagePage extends StatelessWidget {
@@ -10,14 +11,23 @@ class MessagePage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Top padding + header
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 50.0, bottom: 15.0),
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+              top: 50.0,
+              bottom: 15.0,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Icon(Icons.arrow_back_ios, size: 28),
+                GestureDetector(
+                  onTap: () {
+                    context.go('/chat');
+                  },
+                  child: Icon(Icons.arrow_back_ios, size: 28),
+                ),
                 SizedBox(width: 10),
                 CircleAvatar(
                   radius: 25,
@@ -27,17 +37,24 @@ class MessagePage extends StatelessWidget {
                     backgroundImage: AssetImage('assets/avatar/user1.png'),
                   ),
                 ),
+
                 SizedBox(width: 15),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'John Doe',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       'Online',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -50,9 +67,8 @@ class MessagePage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ListView(
-                reverse: true, // messages start from bottom like chat apps
+                reverse: true,
                 children: [
-                  // Example messages (you can replace with real messages)
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -74,7 +90,10 @@ class MessagePage extends StatelessWidget {
                         color: Colors.blue[300],
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text("Hi, how are you?", style: TextStyle(color: Colors.white)),
+                      child: Text(
+                        "Hi, how are you?",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],
@@ -82,7 +101,6 @@ class MessagePage extends StatelessWidget {
             ),
           ),
 
-          // Fixed input field at bottom
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             color: Colors.white,
@@ -117,7 +135,7 @@ class MessagePage extends StatelessWidget {
                       print("Send button pressed");
                     },
                   ),
-                )
+                ),
               ],
             ),
           ),
