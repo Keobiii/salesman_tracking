@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:salesman_tracking/components/bottom_navigation.dart';
 import 'package:salesman_tracking/features/Account/account_page.dart';
 import 'package:salesman_tracking/features/Chat/chat_page.dart';
+import 'package:salesman_tracking/features/Chat/message_page.dart';
 import 'package:salesman_tracking/features/Home/home_page.dart';
 import 'package:salesman_tracking/features/Track/track_page.dart';
 
@@ -15,7 +16,7 @@ final _router = GoRouter(
         currentLocation: state.uri.toString(), // Pass current URI
       ),
       routes: [
-        GoRoute(path: "/home", builder: (context, state) => const HomePage()),
+        GoRoute(path: "/home", builder: (context, state) => const MessagePage()),
         GoRoute(path: "/track", builder: (context, state) => const TrackPage()),
         GoRoute(path: "/chat", builder: (context, state) => const ChatPage()),
         GoRoute(path: "/account", builder: (context, state) => const AccountPage()),
