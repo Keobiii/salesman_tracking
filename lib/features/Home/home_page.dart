@@ -2,12 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:salesman_tracking/constant/user_location.dart';
+import 'package:intl/intl.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late DateTime today;
+  late List<DateTime> weekDates;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    today = DateTime.now();
+    _generateWeek(today);
+  }
+
+  void _generateWeek(DateTime date) {
+    // Start from today
+    DateTime startDay = date;
+
+    // Generate 4 days: today + next 3 days
+    weekDates = List.generate(
+      4,
+      (index) => startDay.add(Duration(days: index)),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    String monthName = DateFormat('MMMM yyyy').format(now);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -53,165 +84,251 @@ class HomePage extends StatelessWidget {
             ),
 
             const SizedBox(height: 20),
-
-            // Agent Summary Row
+            Text(
+              monthName,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Total Agents Container
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(8),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 8,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          'Total Agents',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          '150',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              children: weekDates.map((d) {
+                bool isToday =
+                    d.day == today.day &&
+                    d.month == today.month &&
+                    d.year == today.year;
 
-                // Total Active Agents Container
-                Expanded(
+                return Expanded(
                   child: Container(
-                    margin: const EdgeInsets.all(8),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 4,
+                    ), // spacing between boxes
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 8,
+                    ), // flexible sizing
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: const [
+                      color: isToday ? Colors.blue : Colors.white,
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: [
                         BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 8,
-                          offset: Offset(0, 4),
+                          color: Colors.grey.withOpacity(0.3),
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
                         ),
                       ],
                     ),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          'Active Agents',
+                          DateFormat('MMM').format(d), // Sep, Oct, etc.
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.normal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: isToday ? Colors.white : Colors.black,
                           ),
                         ),
-                        SizedBox(height: 16),
+                        SizedBox(height: 6),
                         Text(
-                          '120',
+                          '${d.day}', // 2, 3, 4...
                           style: TextStyle(
-                            fontSize: 32,
                             fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: isToday ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+                        Text(
+                          DateFormat('EEE').format(d), // Mon, Tue...
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isToday ? Colors.white : Colors.black,
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                );
+              }).toList(),
             ),
 
             const SizedBox(height: 20),
 
             Text(
-              'Agent List',
+              'Feature Overview',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
 
             // User Locations List
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(top: 15),
-                itemCount: userLocations.length,
-                itemBuilder: (context, index) {
-                  final userLocation = userLocations[index];
-                  final user = userLocation.user;
-
-                  // RETURN the container!
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    padding: const EdgeInsets.only(bottom: 15),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        // Avatar Stack
-                        Container(
-                          height: 45,
-                          width: 45,
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Colors.blue[300],
-                            child: CircleAvatar(
-                              radius: 18,
-                              backgroundImage: AssetImage(user.avatar),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(width: 12),
-
-                        // User Info
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${user.firstName} ${user.lastName}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'IT Support',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 14,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
+            buildHomeContainers(),
           ],
         ),
+      ),
+    );
+  }
+
+  Row _summaryContainer() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        // Total Agents Container
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  'Total Agents',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  '150',
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Total Active Agents Container
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  'Active Agents',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  '120',
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Expanded buildHomeContainers() {
+    // Example data for your home page
+    final List<Map<String, dynamic>> containerData = [
+      {'title': 'Sales', 'subtitle': 'Daily report', 'color': Colors.blue[300]},
+      {
+        'title': 'Inventory',
+        'subtitle': 'Stock levels',
+        'color': Colors.green[300],
+      },
+      {
+        'title': 'Support',
+        'subtitle': 'Open tickets',
+        'color': Colors.orange[300],
+      },
+      {
+        'title': 'Analytics',
+        'subtitle': 'Weekly stats',
+        'color': Colors.purple[300],
+      },
+    ];
+
+    return Expanded(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(top: 15),
+        itemCount: containerData.length,
+        itemBuilder: (context, index) {
+          final item = containerData[index];
+
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.all(25),
+            decoration: BoxDecoration(
+              color: item['color'],
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                // Icon or avatar for illustration
+                Container(
+                  height: 45,
+                  width: 45,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.5),
+                  ),
+                  child: Icon(
+                    Icons.folder, // example icon
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // Title & Subtitle
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item['title'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        item['subtitle'],
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Optional: arrow icon
+                Icon(Icons.arrow_forward_ios, color: Colors.white70, size: 16),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
