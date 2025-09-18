@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:salesman_tracking/constant/user_location.dart';
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
@@ -40,7 +37,7 @@ class _HomePageState extends State<HomePage> {
     String monthName = DateFormat('MMMM yyyy').format(now);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
       body: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 40.0),
         child: Column(
@@ -83,10 +80,10 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             Text(
               monthName,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
             Row(
@@ -157,7 +154,7 @@ class _HomePageState extends State<HomePage> {
 
             Text(
               'Feature Overview',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
 
             // User Locations List
@@ -271,10 +268,10 @@ class _HomePageState extends State<HomePage> {
 
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
-            padding: const EdgeInsets.all(25),
+            padding: const EdgeInsets.only(bottom: 35, top: 35, left: 20, right: 20),
             decoration: BoxDecoration(
               color: item['color'],
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.3),
