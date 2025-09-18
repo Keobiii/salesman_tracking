@@ -36,132 +36,241 @@ class _HomePageState extends State<HomePage> {
     DateTime now = DateTime.now();
     String monthName = DateFormat('MMMM yyyy').format(now);
 
+    final List<Map<String, dynamic>> gridItems = const [
+      {'title': 'Notes', 'icon': Icons.note},
+      {'title': 'About', 'icon': Icons.info},
+      {'title': 'Team', 'icon': Icons.group},
+      {'title': 'Tracking', 'icon': Icons.location_on},
+    ];
+
+    final List<String> announcements = const [
+      'Meeting at 3 PM',
+      'John checked in at HQ',
+      'New company policy released',
+      'Project deadline approaching',
+      'Project deadline approaching',
+      'Project deadline approaching',
+      'Project deadline approaching',
+    ];
+
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      body: Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header Row
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: CircleAvatar(
-                    radius: 22,
-                    backgroundColor: Colors.blue[300],
-                    child: CircleAvatar(
-                      radius: 20,
-                      backgroundImage: AssetImage('assets/avatar/user1.png'),
+  backgroundColor: Colors.grey[100],
+  body: SafeArea(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Sticky Header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 26,
+                backgroundColor: Colors.blue[300],
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundImage: AssetImage('assets/avatar/user1.png'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Hello 👋',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black54,
                     ),
                   ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Lorem Ipsum',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+
+        // Scrollable Content
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Grid 2x2
+                GridView.builder(
+                  shrinkWrap: true, // lets GridView take only needed height
+                  physics: const NeverScrollableScrollPhysics(), // prevent inner scroll
+                  itemCount: gridItems.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 1.2,
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = gridItems[index];
+                    return GestureDetector(
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('${item['title']} tapped!')),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 6,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              item['icon'],
+                              size: 48,
+                              color: Colors.blueAccent,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              item['title'],
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Hello 👋',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
+
+                const SizedBox(height: 30),
+
+                // Announcements
+                const Text(
+                  'Announcements',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12),
+
+                ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true, // take only needed height
+                  itemCount: announcements.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 10),
+                  itemBuilder: (context, index) {
+                    return Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
                       ),
-                    ),
-                    Text(
-                      'Lorem Ipsum',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                      child: Text(
+                        announcements[index],
+                        style: const TextStyle(fontSize: 16),
                       ),
-                    ),
-                  ],
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 20), // optional padding at bottom
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+);
+
+  }
+
+  Row _dateRow() {
+    return Row(
+      children: weekDates.map((d) {
+        bool isToday =
+            d.day == today.day &&
+            d.month == today.month &&
+            d.year == today.year;
+
+        return Expanded(
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: 4,
+            ), // spacing between boxes
+            padding: EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: 8,
+            ), // flexible sizing
+            decoration: BoxDecoration(
+              color: isToday ? Colors.blue : Colors.white,
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(50),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
-
-            const SizedBox(height: 30),
-            Text(
-              monthName,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: weekDates.map((d) {
-                bool isToday =
-                    d.day == today.day &&
-                    d.month == today.month &&
-                    d.year == today.year;
-
-                return Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 4,
-                    ), // spacing between boxes
-                    padding: EdgeInsets.symmetric(
-                      vertical: 16,
-                      horizontal: 8,
-                    ), // flexible sizing
-                    decoration: BoxDecoration(
-                      color: isToday ? Colors.blue : Colors.white,
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          blurRadius: 4,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          DateFormat('MMM').format(d), // Sep, Oct, etc.
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: isToday ? Colors.white : Colors.black,
-                          ),
-                        ),
-                        SizedBox(height: 6),
-                        Text(
-                          '${d.day}', // 2, 3, 4...
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: isToday ? Colors.white : Colors.black,
-                          ),
-                        ),
-                        SizedBox(height: 6),
-                        Text(
-                          DateFormat('EEE').format(d), // Mon, Tue...
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: isToday ? Colors.white : Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  DateFormat('MMM').format(d), // Sep, Oct, etc.
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: isToday ? Colors.white : Colors.black,
                   ),
-                );
-              }).toList(),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  '${d.day}', // 2, 3, 4...
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: isToday ? Colors.white : Colors.black,
+                  ),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  DateFormat('EEE').format(d), // Mon, Tue...
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: isToday ? Colors.white : Colors.black,
+                  ),
+                ),
+              ],
             ),
-
-            const SizedBox(height: 20),
-
-            Text(
-              'Feature Overview',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-
-            // User Locations List
-            buildHomeContainers(),
-          ],
-        ),
-      ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -268,7 +377,12 @@ class _HomePageState extends State<HomePage> {
 
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
-            padding: const EdgeInsets.only(bottom: 35, top: 35, left: 20, right: 20),
+            padding: const EdgeInsets.only(
+              bottom: 35,
+              top: 35,
+              left: 20,
+              right: 20,
+            ),
             decoration: BoxDecoration(
               color: item['color'],
               borderRadius: BorderRadius.circular(15),
