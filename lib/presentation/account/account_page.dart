@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
@@ -79,6 +80,54 @@ class AccountPage extends StatelessWidget {
                   ),
                 ),
                 child: const Text('Logout', style: TextStyle(color: Colors.white),),
+              ),
+            ),
+
+            SizedBox(
+              width: 200, // button width
+              height: 50, // button height
+              child: ElevatedButton(
+                onPressed: () {
+                  // Add your logout logic here
+                  context.go('/login');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  shadowColor: Colors.redAccent.withOpacity(0.5),
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                child: const Text('Go to Login', style: TextStyle(color: Colors.white),),
+              ),
+            ),
+
+            SizedBox(
+              width: 200, // button width
+              height: 50, // button height
+              child: ElevatedButton(
+                onPressed: () {
+                  // Add your logout logic here
+                  context.go('/register');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  shadowColor: Colors.redAccent.withOpacity(0.5),
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                child: const Text('Go to Register', style: TextStyle(color: Colors.white),),
               ),
             ),
           ],
