@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
@@ -37,10 +39,21 @@ class _HomePageState extends State<HomePage> {
     String monthName = DateFormat('MMMM yyyy').format(now);
 
     final List<Map<String, dynamic>> gridItems = const [
-      {'title': 'Notes', 'icon': Icons.note},
-      {'title': 'About', 'icon': Icons.info},
-      {'title': 'Team', 'icon': Icons.group},
-      {'title': 'Tracking', 'icon': Icons.location_on},
+      {
+        'title': 'Create Notes',
+        'icon': Iconsax.note,
+        'color': Color(0xFF4CAF50), // green
+      },
+      {
+        'title': 'Chat',
+        'icon': Iconsax.message,
+        'color': Color(0xFFFF9800), // orange
+      },
+      {
+        'title': 'About',
+        'icon': Iconsax.information,
+        'color': Color(0xFF2196F3), // blue
+      },
     ];
 
     final List<String> announcements = const [
@@ -54,158 +67,218 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
-  backgroundColor: Colors.grey[100],
-  body: SafeArea(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Sticky Header
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
-          child: Row(
+      backgroundColor: Colors.grey[100],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 26,
-                backgroundColor: Colors.blue[300],
-                child: CircleAvatar(
-                  radius: 24,
-                  backgroundImage: AssetImage('assets/avatar/user1.png'),
-                ),
-              ),
-              const SizedBox(width: 12),
+              const SizedBox(height: 25),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   Text(
-                    'Hello 👋',
+                    'Hello Lorem 👋',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  Text(
+                    'Lets get something done today',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                       color: Colors.black54,
                     ),
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Lorem Ipsum',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
                 ],
+              ),
+
+              const SizedBox(height: 30),
+
+
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      StaggeredGrid.count(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                        children: [
+                          // Banner: 2x2 but with aspect ratio
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 1,
+                            mainAxisCellCount: 1.6,
+                            child: AspectRatio(
+                              aspectRatio: 1, // adjust height
+                              child: buildGridItem(gridItems[0], context),
+                            ),
+                          ),
+
+                          // Item 2 (square)
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 1,
+                            mainAxisCellCount: 0.8,
+                            child: AspectRatio(
+                              aspectRatio: 1, // perfect square
+                              child: buildGridItem(gridItems[1], context),
+                            ),
+                          ),
+
+                          // Item 3 (square)
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 1,
+                            mainAxisCellCount: 0.8,
+                            child: AspectRatio(
+                              aspectRatio: 1, // perfect square
+                              child: buildGridItem(gridItems[2], context),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      // Announcements
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Announcements',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'See All',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+
+                      ListView.separated(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: announcements.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 10),
+                        itemBuilder: (context, index) {
+                          return Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Title',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      announcements[index],
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+
+                                Text(
+                                  DateFormat('hh:mm a').format(now),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
 
-        // Scrollable Content
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Grid 2x2
-                GridView.builder(
-                  shrinkWrap: true, // lets GridView take only needed height
-                  physics: const NeverScrollableScrollPhysics(), // prevent inner scroll
-                  itemCount: gridItems.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 1.2,
-                  ),
-                  itemBuilder: (context, index) {
-                    final item = gridItems[index];
-                    return GestureDetector(
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('${item['title']} tapped!')),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 6,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              item['icon'],
-                              size: 48,
-                              color: Colors.blueAccent,
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              item['title'],
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 30),
-
-                // Announcements
-                const Text(
-                  'Announcements',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 12),
-
-                ListView.separated(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true, // take only needed height
-                  itemCount: announcements.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        announcements[index],
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 20), // optional padding at bottom
-              ],
+  Widget buildGridItem(Map<String, dynamic> item, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('${item['title']} tapped!')));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: item['color'].withOpacity(0.1), // soft background
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
             ),
-          ),
+          ],
         ),
-      ],
-    ),
-  ),
-);
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Circle for icon
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: item['color'],
+                shape: BoxShape.circle,
+              ),
+              child: Icon(item['icon'], size: 26, color: Colors.white),
+            ),
 
+            const SizedBox(height: 14),
+
+            // Title
+            Text(
+              item['title'],
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Row _dateRow() {
